@@ -86,9 +86,9 @@ print("Page title:", driver.title)
 try_login()
 
 # hide mouse cursor
-driver.execute_script("""
-    document.body.style.cursor = 'none';
-""")
+#driver.execute_script("""
+#    document.body.style.cursor = 'none';
+#""")
 
 # --- Auto-refresh loop ---
 try:
