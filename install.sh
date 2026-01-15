@@ -1,19 +1,19 @@
 #!/bin/bash
 
-sudo apt-get update
-sudo apt-get upgrade -y
-sudo apt autoremove -y
+#sudo apt-get update
+#sudo apt-get upgrade -y
+#sudo apt autoremove -y
 
-sudo apt update --fix-missing -y
+#sudo apt update --fix-missing -y
 
-sudo apt install chromium-chromedriver -y
-sudo apt install chromium -y
-sudo apt install chromium-browser -y
-sudo apt install chromium-driver -y
-sudo apt install python3-selenium -y
-sudo apt install python3-dotenv
+#sudo apt install chromium-chromedriver -y
+#sudo apt install chromium -y
+#sudo apt install chromium-browser -y
+#sudo apt install chromium-driver -y
+#sudo apt install python3-selenium -y
+#sudo apt install python3-dotenv
 
-apt update --fix-missing -y
+#apt update --fix-missing -y
 
 
 
@@ -21,37 +21,26 @@ apt update --fix-missing -y
 echo "Starting DietPi configuration..."
 
 # --- VARIABLES ---
-# Change these to your desired settings
 LOCALE="C.UTF-8"
 TIMEZONE="Europe/Vienna"
 KEYBOARD_LAYOUT="at"
 
-# --- UPDATE SYSTEM (optional but recommended) ---
-# echo "Updating system..."
-# sudo apt update && sudo apt upgrade -y
+DIETPI_TXT="/boot/dietpi.txt"
 
-# --- SET LOCALE ---
-echo "Setting locale to $LOCALE..."
-sudo sed -i "s/^# *$LOCALE/$LOCALE/" /etc/locale.gen
-sudo locale-gen
-sudo update-locale LANG=$LOCALE
+# --- Set locale ---
+sudo sed -i '/^AUTO_SETUP_LOCALE=/d' "$DIETPI_TXT"
+echo "AUTO_SETUP_LOCALE=$LOCALE" | sudo tee -a "$DIETPI_TXT"
 
-# --- SET TIMEZONE ---
-echo "Setting timezone to $TIMEZONE..."
-sudo timedatectl set-timezone "$TIMEZONE"
+# --- Set keyboard layout ---
+sudo sed -i '/^AUTO_SETUP_KEYBOARD_LAYOUT=/d' "$DIETPI_TXT"
+echo "AUTO_SETUP_KEYBOARD_LAYOUT=$KEYBOARD_LAYOUT" | sudo tee -a "$DIETPI_TXT"
 
-# --- SET KEYBOARD LAYOUT ---
-echo "Setting keyboard layout to $KEYBOARD_LAYOUT..."
-sudo sed -i "s/XKBLAYOUT=.*/XKBLAYOUT=\"$KEYBOARD_LAYOUT\"/" /etc/default/keyboard
-sudo dpkg-reconfigure -f noninteractive keyboard-configuration
-sudo setupcon
+# --- Set timezone ---
+sudo sed -i '/^AUTO_SETUP_TIMEZONE=/d' "$DIETPI_TXT"
+echo "AUTO_SETUP_TIMEZONE=$TIMEZONE" | sudo tee -a "$DIETPI_TXT"
 
-# --- RESTART SERVICES TO APPLY CHANGES ---
-echo "Restarting system services to apply changes..."
-sudo systemctl restart keyboard-setup
-sudo systemctl restart console-setup
+echo "DietPi configuration updated. Reboot required to apply changes."
 
-echo "Done! Locale: $LOCALE, Timezone: $TIMEZONE, Keyboard: $KEYBOARD_LAYOUT"
 
 
 
