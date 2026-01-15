@@ -1,0 +1,15 @@
+[Unit]
+Description=Raspberry Pi Daily Display Schedule
+After=graphical.target
+
+[Service]
+Type=simple
+User=root
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/python3 /root/MPDV_script/display_schedule_daily.py
+Restart=always
+RestartSec=10
+WorkingDirectory=/root/MPDV_script
+
+[Install]
+WantedBy=graphical.target
