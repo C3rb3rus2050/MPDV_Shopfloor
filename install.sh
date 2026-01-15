@@ -15,35 +15,6 @@
 
 #apt update --fix-missing -y
 
-
-
-# --- Set locale, timezone, keyboard ---
-echo "Starting DietPi configuration..."
-
-# --- VARIABLES ---
-LOCALE="C.UTF-8"
-TIMEZONE="Europe/Vienna"
-KEYBOARD_LAYOUT="at"
-
-DIETPI_TXT="/boot/dietpi.txt"
-
-# --- Set locale ---
-sudo sed -i '/^AUTO_SETUP_LOCALE=/d' "$DIETPI_TXT"
-echo "AUTO_SETUP_LOCALE=$LOCALE" | sudo tee -a "$DIETPI_TXT"
-
-# --- Set keyboard layout ---
-sudo sed -i '/^AUTO_SETUP_KEYBOARD_LAYOUT=/d' "$DIETPI_TXT"
-echo "AUTO_SETUP_KEYBOARD_LAYOUT=$KEYBOARD_LAYOUT" | sudo tee -a "$DIETPI_TXT"
-
-# --- Set timezone ---
-sudo sed -i '/^AUTO_SETUP_TIMEZONE=/d' "$DIETPI_TXT"
-echo "AUTO_SETUP_TIMEZONE=$TIMEZONE" | sudo tee -a "$DIETPI_TXT"
-
-echo "DietPi configuration updated. Reboot required to apply changes."
-
-
-
-
 CONFIG_FILE="/boot/firmware/config.txt"
 
 # Replace dtoverlay line
@@ -70,4 +41,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable selenium_startup.service
 sudo systemctl start selenium_startup.service
 
-#reboot now
+cd
+rm install.sh
+
+reboot now
