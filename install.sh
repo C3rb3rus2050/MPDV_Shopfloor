@@ -1,19 +1,19 @@
 #!/bin/bash
 
-#sudo apt-get update
-#sudo apt-get upgrade -y
-#sudo apt autoremove -y
+sudo apt-get update
+sudo apt-get upgrade -y
+sudo apt autoremove -y
 
-#sudo apt update --fix-missing -y
+sudo apt update --fix-missing -y
 
-#sudo apt install chromium-chromedriver -y
-#sudo apt install chromium -y
-#sudo apt install chromium-browser -y
-#sudo apt install chromium-driver -y
-#sudo apt install python3-selenium -y
-#sudo apt install python3-dotenv
+sudo apt install chromium-chromedriver -y
+sudo apt install chromium -y
+sudo apt install chromium-browser -y
+sudo apt install chromium-driver -y
+sudo apt install python3-selenium -y
+sudo apt install python3-dotenv
 
-#apt update --fix-missing -y
+apt update --fix-missing -y
 
 CONFIG_FILE="/boot/firmware/config.txt"
 
