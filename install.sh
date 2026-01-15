@@ -15,35 +15,45 @@ sudo apt install python3-dotenv
 
 apt update --fix-missing -y
 
-# --- Set locale, timezone, keyboard ---
 
+
+# --- Set locale, timezone, keyboard ---
 echo "Starting DietPi configuration..."
 
-# --- 1. Set Locale to C.UTF-8 ---
-echo "Setting locale to C.UTF-8..."
-sudo locale-gen C.UTF-8
-sudo update-locale LANG=C.UTF-8
-export LANG=C.UTF-8
-echo "Locale set to:"
-locale | grep LANG
+# --- VARIABLES ---
+# Change these to your desired settings
+LOCALE="C.UTF-8"
+TIMEZONE="Europe/Vienna"
+KEYBOARD_LAYOUT="at"
 
-# --- 2. Set Timezone to Europe/Vienna ---
-echo "Setting timezone to Europe/Vienna..."
-sudo timedatectl set-timezone Europe/Vienna
-echo "Timezone set to:"
-timedatectl | grep "Time zone"
+# --- UPDATE SYSTEM (optional but recommended) ---
+# echo "Updating system..."
+# sudo apt update && sudo apt upgrade -y
 
-# --- 3. Set keyboard layout to Austrian (at) ---
-echo "Setting keyboard layout to 'at'..."
-sudo localectl set-keymap at
-sudo localectl set-x11-keymap at
-echo "Keyboard layout set to:"
-localectl status | grep "Keymap"
+# --- SET LOCALE ---
+echo "Setting locale to $LOCALE..."
+sudo sed -i "s/^# *$LOCALE/$LOCALE/" /etc/locale.gen
+sudo locale-gen
+sudo update-locale LANG=$LOCALE
 
-# Apply instantly for current console
-sudo loadkeys at
+# --- SET TIMEZONE ---
+echo "Setting timezone to $TIMEZONE..."
+sudo timedatectl set-timezone "$TIMEZONE"
 
-echo "✅ DietPi configuration completed!"
+# --- SET KEYBOARD LAYOUT ---
+echo "Setting keyboard layout to $KEYBOARD_LAYOUT..."
+sudo sed -i "s/XKBLAYOUT=.*/XKBLAYOUT=\"$KEYBOARD_LAYOUT\"/" /etc/default/keyboard
+sudo dpkg-reconfigure -f noninteractive keyboard-configuration
+sudo setupcon
+
+# --- RESTART SERVICES TO APPLY CHANGES ---
+echo "Restarting system services to apply changes..."
+sudo systemctl restart keyboard-setup
+sudo systemctl restart console-setup
+
+echo "Done! Locale: $LOCALE, Timezone: $TIMEZONE, Keyboard: $KEYBOARD_LAYOUT"
+
+
 
 CONFIG_FILE="/boot/firmware/config.txt"
 

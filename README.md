@@ -11,7 +11,6 @@ mv MPDV_script /root/
 mv install.sh /root/
 cd
 rm -r /root/MPDV_Shopfloor
-
 sudo sh install.sh
 
 
