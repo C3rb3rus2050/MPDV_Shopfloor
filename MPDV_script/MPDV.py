@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 from dotenv import load_dotenv
 
 # --- Load .env file ---
@@ -84,6 +85,11 @@ print("Page title:", driver.title)
 
 # --- Initial login attempt ---
 try_login()
+
+# hide mouse cursor
+driver.execute_script("""
+    document.body.style.cursor = 'none';
+""")
 
 # --- Auto-refresh loop ---
 try:
