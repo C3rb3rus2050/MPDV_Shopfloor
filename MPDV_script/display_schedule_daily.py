@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv("/root/MPDV_script/.env")
 
-LOG_FILE = "/var/log/hdmi_scheduler.log"
+LOG_FILE = "/root/MPDV_script/hdmi_scheduler.log"
 LOG_ENABLED = os.getenv("LOG_ENABLED", "false").lower() == "true"
 
 days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
