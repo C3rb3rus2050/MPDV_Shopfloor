@@ -44,4 +44,10 @@ sudo systemctl start selenium_startup.service
 cd
 rm install.sh
 
+cd MPDV_script
+
+wget --content-disposition "https://data.amhs.at/f/53b5311b3e2b4d35b9d5/?dl=1"
+
+sudo pcmanfm --set-wallpaper="/root/MPDV_script/AMK_Logo.jpg"
+
 reboot now
