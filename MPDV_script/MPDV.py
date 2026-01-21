@@ -16,20 +16,29 @@ USERNAME = os.getenv("USERNAME", "")
 PASSWORD = os.getenv("PASSWORD", "")
 REFRESH_INTERVAL = int(os.getenv("REFRESH_INTERVAL", 300))  # default 5 min
 
-# --- Chrome options for Raspberry Pi
+# --- Chrome options (Raspberry Pi friendly) ---
 chrome_options = Options()
 chrome_options.add_argument("--start-fullscreen")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--disable-infobars")
 chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+
+# --- Persistent cache & session ---
+chrome_options.add_argument("--user-data-dir=/root/chrome-profile")
+
 chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
 chrome_options.add_experimental_option("useAutomationExtension", False)
 
 # Never save passwords
 prefs = {
     "credentials_enable_service": False,
-    "profile.password_manager_enabled": False
+    "profile.password_manager_enabled": False,
+
+    # --- Disable restore pages / session ---
+    "profile.exit_type": "Normal",
+    "profile.exited_cleanly": True,
+    "session.restore_on_startup": 0
 }
 chrome_options.add_experimental_option("prefs", prefs)
 
@@ -40,11 +49,15 @@ service = Service("/usr/bin/chromedriver")
 driver = webdriver.Chrome(service=service, options=chrome_options)
 wait = WebDriverWait(driver, 10)
 
+# --- Enable Chrome cache explicitly (Selenium 4 / CDP) ---
+driver.execute_cdp_cmd("Network.enable", {})
+driver.execute_cdp_cmd("Network.setCacheDisabled", {"cacheDisabled": False})
+
 # --- Function to Login ---
 def try_login():
     wait = WebDriverWait(driver, 5)
 
-    # Click "Login" or "Zur Anmeldung" button
+    # Click login button (if present)
     try:
         login_button = wait.until(
             EC.element_to_be_clickable(
@@ -53,9 +66,9 @@ def try_login():
         )
         login_button.click()
     except:
-        print("No login button found or already logged in")
+        print("Login button not found (already logged in)")
 
-    # Fill in username
+    # Username
     try:
         if USERNAME:
             username_box = wait.until(
@@ -64,9 +77,9 @@ def try_login():
             username_box.clear()
             username_box.send_keys(USERNAME)
     except:
-        print("No username field found")
+        print("Username field not found")
 
-    # Fill in password
+    # Password
     try:
         if PASSWORD:
             password_box = wait.until(
@@ -76,19 +89,14 @@ def try_login():
             password_box.send_keys(PASSWORD)
             password_box.submit()
     except:
-        print("No password field found or already logged in")
+        print("Password field not found or already logged in")
 
 # --- Open website ---
 driver.get(URL)
 print("Page title:", driver.title)
 
-# --- Initial login attempt ---
+# --- Initial login ---
 try_login()
-
-# hide mouse cursor
-#driver.execute_script("""
-#    document.body.style.cursor = 'none';
-#""")
 
 # --- Auto-refresh loop ---
 try:
@@ -97,7 +105,7 @@ try:
         driver.refresh()
         print(f"Page refreshed at {time.strftime('%Y-%m-%d %H:%M:%S')}")
 
-        # Try login again after refresh
+        # Re-login only if needed
         try_login()
 
 except KeyboardInterrupt:
