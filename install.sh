@@ -13,6 +13,12 @@ sudo apt install chromium-driver -y
 sudo apt install python3-selenium -y
 sudo apt install python3-dotenv
 
+sudo apt install python3-venv -y
+python3 -m venv .venv
+source .venv/bin/activate
+pip install requests -y
+pip3 install selenium -y
+
 apt update --fix-missing -y
 
 CONFIG_FILE="/boot/firmware/config.txt"
