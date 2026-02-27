@@ -30,7 +30,7 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--disable-infobars")
 chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-chrome_options.add_argument("--headless")  # optional if running server-only
+#chrome_options.add_argument("--headless")  # optional if running server-only
 
 # --- Persistent cache & session ---
 chrome_options.add_argument("--user-data-dir=/root/chrome-profile")
